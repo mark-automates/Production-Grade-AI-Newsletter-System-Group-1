@@ -1,0 +1,1714 @@
+{
+  "name": "Data Ingestion Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        1136
+      ],
+      "id": "8bf51224-cab5-4bfb-8af0-97c006b971b3",
+      "name": "BBC Technology",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://www.espn.com/espn/rss/news",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        1712
+      ],
+      "id": "c650ce3b-d784-4649-9e7d-074c3c23cd79",
+      "name": "ESPN",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db567739-16f4-4d08-a995-c30f4861e099",
+              "name": "Title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afdac23-e23c-4c17-aa13-e51902064572",
+              "name": "summary",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "74d74632-eba2-4aab-8f95-e5a4849cc227",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "581228d3-1616-4d4a-8d51-649577471df1",
+              "name": "source",
+              "value": "ESPN",
+              "type": "string"
+            },
+            {
+              "id": "ee72dce3-99f5-4da4-82c3-14353712d690",
+              "name": "category",
+              "value": "Sports",
+              "type": "string"
+            },
+            {
+              "id": "69a2b04d-5ba5-49d7-a668-c7cc6f4cc67d",
+              "name": "published_date",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "cbb30bc0-b9b5-47f6-a48d-935dc8ee6d7c",
+              "name": "run_id",
+              "value": "={{$('Step 2: Initialize Run').item.json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        1712
+      ],
+      "id": "1d53f22e-fed7-4006-82d0-6b170d4ad8d0",
+      "name": "Standardize ESPN"
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        240,
+        848
+      ],
+      "id": "95b36ab1-d848-4e37-b715-932936f3ec22",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "https://www.standardmedia.co.ke/rss/politics.php",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        656
+      ],
+      "id": "4af74560-d3c0-48eb-83e4-bf8c45a77d91",
+      "name": "The Standard",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        656
+      ],
+      "id": "31df23ed-685b-45cc-93db-5912cb089c17",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        944
+      ],
+      "id": "c59e3f48-fcdb-45a2-a685-64b8c0da62b0",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        1136
+      ],
+      "id": "1d5c8038-b441-4409-b444-ce55eab0121f",
+      "name": "Limit2"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        1472
+      ],
+      "id": "a6592c33-6e71-457e-8f39-f91fb810df30",
+      "name": "Limit3"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        1712
+      ],
+      "id": "f715dedd-dd4e-4935-8078-d3906697cfa4",
+      "name": "Limit4"
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        944
+      ],
+      "id": "ec649543-1815-490a-aded-975c32b6501e",
+      "name": "BBC Business",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db567739-16f4-4d08-a995-c30f4861e099",
+              "name": "Title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afdac23-e23c-4c17-aa13-e51902064572",
+              "name": "summary",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "74d74632-eba2-4aab-8f95-e5a4849cc227",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "581228d3-1616-4d4a-8d51-649577471df1",
+              "name": "source",
+              "value": "BBC",
+              "type": "string"
+            },
+            {
+              "id": "ee72dce3-99f5-4da4-82c3-14353712d690",
+              "name": "category",
+              "value": "Business",
+              "type": "string"
+            },
+            {
+              "id": "69a2b04d-5ba5-49d7-a668-c7cc6f4cc67d",
+              "name": "published_date",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "cbb30bc0-b9b5-47f6-a48d-935dc8ee6d7c",
+              "name": "run_id",
+              "value": "={{$('Step 2: Initialize Run').item.json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        944
+      ],
+      "id": "2882332f-7367-4f51-9973-11c8fbd82bea",
+      "name": "Standardize BBC Business"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=Nairobi+events+OR+Kenya+events&hl=en-KE&gl=KE&ceid=KE:en",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        1472
+      ],
+      "id": "4d054c17-9368-4356-893b-96404a735a11",
+      "name": "Nairobi Events",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db567739-16f4-4d08-a995-c30f4861e099",
+              "name": "Title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afdac23-e23c-4c17-aa13-e51902064572",
+              "name": "summary",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "74d74632-eba2-4aab-8f95-e5a4849cc227",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "581228d3-1616-4d4a-8d51-649577471df1",
+              "name": "source",
+              "value": "Nairobi Events",
+              "type": "string"
+            },
+            {
+              "id": "ee72dce3-99f5-4da4-82c3-14353712d690",
+              "name": "category",
+              "value": "Events",
+              "type": "string"
+            },
+            {
+              "id": "69a2b04d-5ba5-49d7-a668-c7cc6f4cc67d",
+              "name": "published_date",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "cbb30bc0-b9b5-47f6-a48d-935dc8ee6d7c",
+              "name": "run_id",
+              "value": "={{$('Step 2: Initialize Run').item.json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        1472
+      ],
+      "id": "ddbd9740-1f30-49ed-9681-8a4050e33b44",
+      "name": "Standardize Nairobi Events"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $now }}",
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        944,
+        1216
+      ],
+      "id": "08d8c378-2b56-48f1-8bcf-a6db064ac108",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "articles ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        464,
+        992
+      ],
+      "id": "0264c44c-9df6-44ec-ae84-c8fb7d98e0df",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "model": "devstral-medium-latest",
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.4,
+          "maxRetries": 6
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        688,
+        1216
+      ],
+      "id": "4d2b1985-4912-4b4f-add1-1ff54db71705",
+      "name": "Mistral Cloud Chat Model1",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "u5teOB5LEmBZI3E2",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.4,
+          "maxRetries": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        816,
+        1216
+      ],
+      "id": "d574e10d-3834-43ae-8362-239fd7be4984",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Y7Cr48R0VIcXEigO",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"stories\": [\n    {\n      \"category\": \"Politics\",\n      \"source\": \"The Standard\",\n      \"title\": \"Actual story title\",\n      \"summary\": \"A concise summary.\",\n      \"url\": \"https://example.com/story\",\n      \"publishedDate\": \"2026-07-18T10:00:00Z\"\n    },\n    {\n      \"category\": \"Business\",\n      \"source\": \"BBC Business\",\n      \"title\": \"Actual story title\",\n      \"summary\": \"A concise summary.\",\n      \"url\": \"https://example.com/story\",\n      \"publishedDate\": \"2026-07-18T11:00:00Z\"\n    }\n  ]\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1072,
+        1216
+      ],
+      "id": "93c3e917-4c25-48af-9eaf-b4e8193e4607",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": "devstral-medium-latest",
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.4,
+          "maxRetries": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        1424
+      ],
+      "id": "30aad6d9-4ec4-43df-bab2-9039e4f8a9a4",
+      "name": "Mistral Cloud Chat Model2",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "u5teOB5LEmBZI3E2",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "kKxuvrh2ZBoOnU9R",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/kKxuvrh2ZBoOnU9R",
+          "cachedResultName": "execute by another"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        992
+      ],
+      "id": "698626cd-c4ac-468d-b7d3-b3cb3e5efa8b",
+      "name": "Call 'execute by another'"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                5
+              ],
+              "triggerAtHour": 14
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -880,
+        944
+      ],
+      "id": "874046ff-e320-4047-88eb-00b3824e3cfc",
+      "name": "Step 1: Schedule Trigger @ 2pm"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d5e64afb-d108-43d8-9cd1-02b273b647c4",
+              "name": "run_id",
+              "value": "={{$now.format(\"yyyyMMddHHmmss\")}}",
+              "type": "string"
+            },
+            {
+              "id": "07247544-a073-4bd1-a3f2-e7b7d1bf29dd",
+              "name": "started_at",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "1e6932a2-53b7-492f-bbb6-616e50036690",
+              "name": "workflow_version",
+              "value": "v2.0",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -656,
+        944
+      ],
+      "id": "e0d12e15-47af-4b01-aab1-4211657db4fe",
+      "name": "Step 2: Initialize Run"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=2103906182#gid=2103906182",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 702475151,
+          "mode": "list",
+          "cachedResultName": "SourceLogs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=702475151"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.Title }}",
+            "Summary": "={{ $json.summary }}",
+            "URL": "={{ $json.url }}",
+            "Source": "={{ $json.source }}",
+            "Published_date": "={{ $json.published_date }}",
+            "Category": "={{ $json.category }}",
+            "Run_ID": "={{ $json.run_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Published_date",
+              "displayName": "Published_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Run_ID",
+              "displayName": "Run_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        656
+      ],
+      "id": "df7d9651-676f-457e-a6a6-a0913bea6919",
+      "name": "Logging Data: The Standard",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db567739-16f4-4d08-a995-c30f4861e099",
+              "name": "Title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afdac23-e23c-4c17-aa13-e51902064572",
+              "name": "summary",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "74d74632-eba2-4aab-8f95-e5a4849cc227",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "581228d3-1616-4d4a-8d51-649577471df1",
+              "name": "source",
+              "value": "The Standard",
+              "type": "string"
+            },
+            {
+              "id": "ee72dce3-99f5-4da4-82c3-14353712d690",
+              "name": "category",
+              "value": "Politics",
+              "type": "string"
+            },
+            {
+              "id": "69a2b04d-5ba5-49d7-a668-c7cc6f4cc67d",
+              "name": "published_date",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "cbb30bc0-b9b5-47f6-a48d-935dc8ee6d7c",
+              "name": "run_id",
+              "value": "={{$('Step 2: Initialize Run').item.json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        656
+      ],
+      "id": "dc327ff6-0dd7-4d74-bd67-a00154bbe0af",
+      "name": "Standardize The Standard"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=702475151#gid=702475151",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 702475151,
+          "mode": "list",
+          "cachedResultName": "SourceLogs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=702475151"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.Title }}",
+            "Summary": "={{ $json.summary }}",
+            "URL": "={{ $json.url }}",
+            "Source": "={{ $json.source }}",
+            "Category": "={{ $json.category }}",
+            "Published_date": "={{ $json.published_date }}",
+            "Run_ID": "={{ $json.run_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Published_date",
+              "displayName": "Published_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Run_ID",
+              "displayName": "Run_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        1136
+      ],
+      "id": "e092b9bd-acd2-4996-b922-ffe6f0ea8f30",
+      "name": "Logging Data: BBC Business",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=702475151#gid=702475151",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 702475151,
+          "mode": "list",
+          "cachedResultName": "SourceLogs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=702475151"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Published_date",
+              "displayName": "Published_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Run_ID",
+              "displayName": "Run_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        1328
+      ],
+      "id": "5c62ef79-a241-4194-9241-15df06b08703",
+      "name": "Logging Data: BBC Technology",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=702475151#gid=702475151",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 702475151,
+          "mode": "list",
+          "cachedResultName": "SourceLogs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=702475151"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.Title }}",
+            "Summary": "={{ $json.summary }}",
+            "URL": "={{ $json.url }}",
+            "Source": "={{ $json.source }}",
+            "Category": "={{ $json.category }}",
+            "Published_date": "={{ $json.published_date }}",
+            "Run_ID": "={{ $json.run_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Published_date",
+              "displayName": "Published_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Run_ID",
+              "displayName": "Run_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        1520
+      ],
+      "id": "ba56f1ee-77d0-4339-8aac-cac0c90e8f77",
+      "name": "Logging Data: Nairobi Events",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=702475151#gid=702475151",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 702475151,
+          "mode": "list",
+          "cachedResultName": "SourceLogs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=702475151"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.Title }}",
+            "Summary": "={{ $json.summary }}",
+            "URL": "={{ $json.url }}",
+            "Source": "={{ $json.source }}",
+            "Category": "={{ $json.category }}",
+            "Published_date": "={{ $json.published_date }}",
+            "Run_ID": "={{ $json.run_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Published_date",
+              "displayName": "Published_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Run_ID",
+              "displayName": "Run_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        1712
+      ],
+      "id": "a8a39696-e83f-434d-8337-98c8bd44ac1a",
+      "name": "Logging Data: ESPN",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=702475151#gid=702475151",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 657258257,
+          "mode": "list",
+          "cachedResultName": "Articles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=657258257"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "RunID": "={{ $json.run_id }}",
+            "Category": "={{ $json.category }}",
+            "Source": "={{ $json.source }}",
+            "Title": "={{ $json.Title }}",
+            "Summary": "={{ $json.summary }}",
+            "URL": "={{ $json.url }}",
+            "PublishedDate": "={{ $json.published_date }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "RunID",
+              "displayName": "RunID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PublishedDate",
+              "displayName": "PublishedDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        800
+      ],
+      "id": "43559f98-cb8f-4dc2-91ee-424a863ed4f2",
+      "name": "Logging Articles",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=This is the array:{{ JSON.stringify($json['articles ']) }}\nRespond now with ONLY the JSON object described above. No other text.",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "You are a newspaper curation assistant. Your job is to go through the data input which is an array of 25 items, 5 from each source, and extract two stories from each source (The Standard, BBC Business, BBC Technology, Nairobi Events, ESPN).\n\nCONSTRAINTS\n1. Strictly only read and output data found in the array that will be shared in the prompt.\n2. Output exactly 1 article per source, a total of 5 items.\n3. You will not hallucinate or come up with your own stories. You only read through the data given, ONLY.\n4. You must always respond with valid JSON only. Do not include any explanation, commentary, markdown code fences, or text outside the JSON object. Your entire response must be a single valid JSON object that can be parsed directly.\n\nFIELD NAMES — CASE SENSITIVE:\nEach story object must use EXACTLY these field names, spelled and capitalized exactly as shown below. Do not use lowercase or snake_case versions (e.g. do not use \"title\", \"published_date\", \"url\" — use \"Title\", \"PublishedDate\", \"URL\" instead):\n- RunID (string)\n- Category (string)\n- Source (string)\n- Title (string)\n- Summary (string)\n- URL (string)\n- PublishedDate (string)\n\nCRITICAL FORMATTING RULES:\n- Output raw JSON only. Never wrap it in markdown code fences (no triple backticks, no \"json\" label, nothing).\n- The top-level object must be exactly: {\"stories\": [...]}\n- Do NOT nest it inside any other key such as \"output\", \"response\", or \"result\".\n- Your entire response must start with the character { and end with the character } — nothing before it, nothing after it.\n\nOutput exactly 5 stories total,  1 per source, 5 sources."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        784,
+        992
+      ],
+      "id": "b651e32f-2c59-471f-b10f-174be979031c",
+      "name": "Data Cleaner"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db567739-16f4-4d08-a995-c30f4861e099",
+              "name": "Title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "0afdac23-e23c-4c17-aa13-e51902064572",
+              "name": "summary",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "74d74632-eba2-4aab-8f95-e5a4849cc227",
+              "name": "url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "581228d3-1616-4d4a-8d51-649577471df1",
+              "name": "source",
+              "value": "BBC",
+              "type": "string"
+            },
+            {
+              "id": "ee72dce3-99f5-4da4-82c3-14353712d690",
+              "name": "category",
+              "value": "Technology",
+              "type": "string"
+            },
+            {
+              "id": "69a2b04d-5ba5-49d7-a668-c7cc6f4cc67d",
+              "name": "published_date",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "cbb30bc0-b9b5-47f6-a48d-935dc8ee6d7c",
+              "name": "run_id",
+              "value": "={{$('Step 2: Initialize Run').item.json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        1136
+      ],
+      "id": "3ef398d2-2309-422c-bc19-4d47853ceb5b",
+      "name": "Standardize BBC Technology"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "BBC Technology": {
+      "main": [
+        [
+          {
+            "node": "Limit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ESPN": {
+      "main": [
+        [
+          {
+            "node": "Limit4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardize ESPN": {
+      "main": [
+        [
+          {
+            "node": "Logging Data: ESPN",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Logging Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "The Standard": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Standardize The Standard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Standardize BBC Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit2": {
+      "main": [
+        [
+          {
+            "node": "Standardize BBC Technology",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit3": {
+      "main": [
+        [
+          {
+            "node": "Standardize Nairobi Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit4": {
+      "main": [
+        [
+          {
+            "node": "Standardize ESPN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BBC Business": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardize BBC Business": {
+      "main": [
+        [
+          {
+            "node": "Logging Data: BBC Business",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Nairobi Events": {
+      "main": [
+        [
+          {
+            "node": "Limit3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardize Nairobi Events": {
+      "main": [
+        [
+          {
+            "node": "Logging Data: Nairobi Events",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Data Cleaner",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Data Cleaner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Data Cleaner",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Data Cleaner",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Data Cleaner",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 1: Schedule Trigger @ 2pm": {
+      "main": [
+        [
+          {
+            "node": "Step 2: Initialize Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 2: Initialize Run": {
+      "main": [
+        [
+          {
+            "node": "BBC Business",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "The Standard",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "BBC Technology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Nairobi Events",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ESPN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardize The Standard": {
+      "main": [
+        [
+          {
+            "node": "Logging Data: The Standard",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Cleaner": {
+      "main": [
+        [
+          {
+            "node": "Call 'execute by another'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardize BBC Technology": {
+      "main": [
+        [
+          {
+            "node": "Logging Data: BBC Technology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Africa/Nairobi",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "pkLarWCkcrXyGyXy"
+  },
+  "versionId": "887d92b0-05e7-4092-9212-6e5c6e5d486f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "48fed755744d55459ece9ccef36da041c952e24afe1b4b477443e787dcdef8f1"
+  },
+  "nodeGroups": [],
+  "id": "an0JBz7qGKad6nIg",
+  "tags": []
+}
