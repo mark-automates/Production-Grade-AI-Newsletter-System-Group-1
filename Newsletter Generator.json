@@ -1,0 +1,777 @@
+{
+  "name": "Newsletter Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "a73712fe-3b5f-4a2c-a740-ce33f19341c5",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -784,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a newsletter writer and HTML email designer. You will receive a JSON array of curated news stories under \"stories\", each with: RunID, Category, Source, Title, Summary, URL, PublishedDate.\n\nYour job is to turn these into a visually engaging HTML email newsletter. Here is the array {{ JSON.stringify($('Return Items').item.json.output.stories) }}\n\nMANDATORY PROCESS — FOLLOW IN THIS EXACT ORDER:\n1. First, count the stories in the input array. State internally: \"The array contains N stories\" (do not include this count in your final output, just use it to guide yourself).\n2. Number each story from 1 to N in the order it appears in the array.\n3. For EACH numbered story, without exception, generate one HTML section. Do not skip, merge, summarize away, or omit any numbered story for any reason — including similarity to another story, length constraints, or category overlap.\n4. Before outputting your final answer, re-count the number of HTML sections you have written. It must exactly equal N. If your count is less than N, you have made an error — go back and add the missing section(s) now, before responding.\n5. Only after confirming the count matches, output the final HTML.\n\nRULES:\n- Do not invent any facts, names, or details beyond what is given in the Title and Summary fields for each story.\n- Do not fabricate additional stories — use exactly the stories provided, no more, no fewer.\n- Output ONLY valid HTML — no markdown, no commentary, no explanation, no story count, nothing outside the HTML itself.\n- Use INLINE CSS only (style=\"...\" attributes) — no <style> blocks or external CSS.\n- Keep total width around 600px, suitable for email (wrapping <table> or <div> with max-width:600px).\n- Make it colorful and lively: a distinct colored banner/header per category section, emoji in headlines where natural, and a bold colorful top banner with the newsletter title and date.\n- Use a clean, readable font stack like Arial, Helvetica, sans-serif.\n- Use professional language, Good Afternoon Young Professionals.\n\nFINAL CHECK (internal, do not print): Does the number of story sections in your HTML output exactly equal the number of story objects in the input array? If not, fix it before respondin",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "You are a newsletter writer and HTML email designer. You will receive a JSON array of curated news stories, each with: RunID, Category, Source, Title, Summary, URL, PublishedDate.\n\nYour job is to turn these into a visually engaging HTML email newsletter.\n\nRULES:\n1. Do not invent any facts, names, or details beyond what is given in the Title and Summary fields for each story.\n2. Do not fabricate additional stories — use exactly the stories provided, no more, no fewer.\n3. Output ONLY valid HTML — no markdown, no commentary, no explanation outside the HTML.\n4. Use INLINE CSS only (style=\"...\" attributes) — do not use <style> blocks or external CSS, since most email clients strip them.\n5. Keep total width around 600px, suitable for email (use a wrapping <table> or <div> with max-width:600px).\n6. Make it colorful and lively: use a distinct colored banner/header for each category section, emoji in headlines where natural, and a bold colorful top banner with the newsletter title and date.\n7. Use a clean, readable font stack like Arial, Helvetica, sans-serif.\n\nSTORY COUNT — CRITICAL, NON-NEGOTIABLE:\n8. Count the exact number of objects in the input array before writing anything. You MUST include one headline section for EVERY SINGLE story object in that array — no skipping, no merging two stories into one section, no dropping the last one, no dropping any one for being \"similar\" to another.\n9. Before finalizing your output, go back and verify: count the number of headline sections you wrote. It must exactly equal the number of story objects you received. If it does not match, add the missing section(s) before responding.\n10. Never truncate the list early due to length constraints — every story gets its own section no matter how long the final HTML becomes."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        400,
+        -336
+      ],
+      "id": "c9dd3ead-7df2-47b6-b148-a1731da03877",
+      "name": "Chief Editor",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "mistral-code-agent-latest",
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.2,
+          "maxRetries": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -112
+      ],
+      "id": "9718650f-6218-4ef5-a172-5c11700181ec",
+      "name": "Mistral Cloud Chat Model",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "u5teOB5LEmBZI3E2",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b:free",
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.2,
+          "maxRetries": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -112
+      ],
+      "id": "8dc6fa07-0da6-4a69-9a2c-3e3d1e0669ee",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Y7Cr48R0VIcXEigO",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $now }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        592,
+        -112
+      ],
+      "id": "f8c46559-822e-45f8-b4ea-e348abea399c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "mistral-code-agent-latest",
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.2,
+          "maxRetries": 2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        48
+      ],
+      "id": "f5699501-c696-4ec1-ba9b-a2fb13e0917b",
+      "name": "Mistral Cloud Chat Model1",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "u5teOB5LEmBZI3E2",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.2,
+          "maxRetries": 2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        48
+      ],
+      "id": "b0114497-41c0-44bc-ae3c-248524cc1eed",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Y7Cr48R0VIcXEigO",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $now }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        1504,
+        48
+      ],
+      "id": "d0ade606-9001-4c13-b998-0c848389f0bf",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        112,
+        -336
+      ],
+      "id": "d0d89668-2284-416f-9dfb-1c73ae4c6e7d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1024,
+        -480
+      ],
+      "id": "c3df578c-173e-4ec6-85d7-d097f66ee467",
+      "name": "Wait",
+      "webhookId": "4d7e84ad-027b-4127-9462-2d93009869fd"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a simple HTML newsletter listing every story below, one section each, in the order given. Format:\n\n<h2>[Newsletter Title] – [Today's Date]</h2>\n<p>[One sentence intro]</p>\n\nThen for each story:\n<h3>[Headline]</h3>\n<p>[2-sentence summary]</p>\n<p><a href=\"[URL]\">Read more</a></p>\n\nStories:\n{{ JSON.stringify($json.output.stories) }}\n\nOutput ONLY the HTML above. Include one section for every story in the array — do not skip any",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "You are a newsletter writer. You will receive a JSON array of curated news stories under \"stories\", each with: RunID, Category, Source, Title, Summary, URL, PublishedDate.\n\nTurn these into a simple HTML email newsletter.\n\nRULES:\n1. Use only the facts given in the Title and Summary fields. Do not invent anything.\n2. Include every story in the array — one section per story, no skipping, no merging.\n3. Output ONLY HTML, nothing else — no markdown, no commentary.\n4. Use basic inline CSS only (style=\"...\" attributes), no <style> blocks.\n5. Keep it simple: a plain title header, then one section per story with a bold headline, a short summary, and a link. No need for colors, banners, or emoji — clarity and completeness matter more than design here."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1312,
+        -176
+      ],
+      "id": "886f4156-f31e-4805-8bec-769620dd3dfd",
+      "name": "Backup Editor"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "mark.were@student.moringaschool.com",
+        "subject": "Newsletter Ready for Review",
+        "message": "=The AI has generated this week's newsletter.\n\nPlease review.\n{{ $json.output }}\n",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "disapproveLabel": "Disapprove"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        -480
+      ],
+      "id": "ba08234b-58b7-465e-ba91-47c04564ec61",
+      "name": "Send Draft for Approval",
+      "webhookId": "88600048-f33f-4a54-8183-7ff5babb57ed",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "S7Mx7vAWulmX8zYf",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d040bec5-79b9-43aa-bc01-f0d08080875e",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1376,
+        -480
+      ],
+      "id": "48565a39-71da-424a-a637-96ee62b74357",
+      "name": "Decision"
+    },
+    {
+      "parameters": {
+        "sendTo": "=mark.were@student.moringaschool.com",
+        "subject": "Weekly Newsletter",
+        "message": "={{ $('Chief Editor').item.json.output }}",
+        "options": {
+          "bccList": "={{ $('Extract Emails').first().json.recipients }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1712,
+        -336
+      ],
+      "id": "f3d2e6cc-80ed-42f5-870d-cad29560098d",
+      "name": "Send Newsletter",
+      "webhookId": "dd3b7614-d5bc-4e3c-a040-77dea0e3e135",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "S7Mx7vAWulmX8zYf",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=2103906182#gid=2103906182",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2103906182,
+          "mode": "list",
+          "cachedResultName": "Newsletter workflow log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=2103906182"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "=({{$now.format('yyyy-MM-dd')}})",
+            "NewsLetterTitle": "Daily Newsletter",
+            "Approved by": "=Mark Were",
+            "Status": "={{ $('Send Draft for Approval').item.json.data.approved }}",
+            "Articles": "5",
+            "Sent": "Yes",
+            "Timestamp": "={{ $now }}",
+            "Model Used": "mistral-code-agent-latest"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approved by",
+              "displayName": "Approved by",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Articles",
+              "displayName": "Articles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sent",
+              "displayName": "Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "NewsLetterTitle",
+              "displayName": "NewsLetterTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Model Used",
+              "displayName": "Model Used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1936,
+        -336
+      ],
+      "id": "760468ed-0326-4c6a-8f4c-39433f9675b0",
+      "name": "Save Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "mark.were@student.moringaschool.com",
+        "subject": "Newsletter Published Successfully",
+        "message": "=Hello Team,  The AI-generated weekly newsletter has been:  \n✅ Reviewed by the Content Lead \n✅ Approved \n✅ Sent to subscribers \n✅ Logged in Google Sheets  Publication Date: {{$now.format('yyyy-MM-dd HH:mm')}}  Regards, n8n Newsletter Automation",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2160,
+        -336
+      ],
+      "id": "ce5d3d85-2469-4b81-b06a-0cd7096ae4a2",
+      "name": "Notify Team",
+      "webhookId": "b0d198e5-6cfe-44e1-972d-e4abe08bdbb3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "S7Mx7vAWulmX8zYf",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit?gid=1385110210#gid=1385110210",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1385110210,
+          "mode": "list",
+          "cachedResultName": "AudienceData",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S-65ylCA26oRX8GNo0H5i6VaUz0mTVlQ0fRJ-lr4lQ/edit#gid=1385110210"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -336,
+        -400
+      ],
+      "id": "e51a7b93-1185-49ab-9c3b-6ae08789f9d3",
+      "name": "Audience Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0ug0OMczLAborogB",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Return all incoming items exactly as they were received\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        -336
+      ],
+      "id": "78e995cd-7dd6-43cf-81ec-0e1e0e9cad2f",
+      "name": "Return Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "const emails = items\n  .map(item => item.json.Email)\n  .filter(email => email && email.includes('@'));\n\nreturn [\n  {\n    json: {\n      recipients: emails.join(', ')\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -400
+      ],
+      "id": "d577c6dc-a7b6-48ff-832d-1019766dc257",
+      "name": "Extract Emails"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "output": {
+            "stories": [
+              {
+                "category": "Politics",
+                "source": "The Standard",
+                "title": "Raila's mausoleum to be completed in two months - Oburu",
+                "summary": "The mausoleum in honour of former Prime Minister Raila Odinga will be completed within two months, ODM party leader and Siaya Senator Oburu Oginga has said.",
+                "url": "https://www.standardmedia.co.ke/politics/article/2001553291/raila-s-mausoleum-to-be-completed-in-two-months-oburu",
+                "publishedDate": "Mon, 20 Jul 2026 15:50:00 +0300"
+              },
+              {
+                "category": "Business",
+                "source": "BBC",
+                "title": "Ryanair profits drop as Iran war puts off passengers and lifts fuel costs",
+                "summary": "The Irish airline said oil prices had increased costs meanwhile Brent crude surpassed $90.",
+                "url": "https://www.bbc.co.uk/news/articles/cn8nldwj12jo?at_medium=RSS&at_campaign=rss",
+                "publishedDate": "Mon, 20 Jul 2026 10:12:36 GMT"
+              },
+              {
+                "category": "Technology",
+                "source": "BBC",
+                "title": "China's Moonshot AI claims Kimi K3 can rival OpenAI and Anthropic",
+                "summary": "The company has unveiled a massive new artificial intelligence model it says can take on top American firms.",
+                "url": "https://www.bbc.co.uk/news/articles/cy9w4q8pgp0o?at_medium=RSS&at_campaign=rss",
+                "publishedDate": "Fri, 17 Jul 2026 16:53:04 GMT"
+              },
+              {
+                "category": "Events",
+                "source": "Nairobi Events",
+                "title": "CTW Kenya 2026 - China Trade Week | Events - Capmad",
+                "summary": "CTW Kenya 2026 - China Trade Week | Events  Capmad",
+                "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1ZclJKU3EzTXhENkp6a0drcVpsODhGWEtGVGhkanBoR09zaTNjQVlFVTZ3N0o0RXRKbHhLbHp1eXJIMlRxa0FaZHhvU2l6VFRxOE1TR21XbFRuVFE1MldIYkhXX3NBVnFpcXZSelVB?oc=5",
+                "publishedDate": "Sat, 18 Jul 2026 08:22:28 GMT"
+              },
+              {
+                "category": "Sports",
+                "source": "ESPN",
+                "title": "World Cup's best and most disappointing XIs, from ...",
+                "summary": "The 2026 World Cup is over, with Spain crowned champions. So let's start handing out some awards starting with the best and the most disappointing players of the tournament.",
+                "url": "https://www.espn.com/soccer/story/_/id/49401634/world-cup-best-xi-most-disappointing-xi-messi-mbappe-haaland-pulisic",
+                "publishedDate": "Mon, 20 Jul 2026 10:13:04 EST"
+              }
+            ]
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Return Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chief Editor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chief Editor",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chief Editor",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chief Editor": {
+      "main": [
+        [
+          {
+            "node": "Send Draft for Approval",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup Editor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Backup Editor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Backup Editor",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Backup Editor",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Chief Editor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Editor": {
+      "main": [
+        [
+          {
+            "node": "Send Newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Draft for Approval": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision": {
+      "main": [
+        [
+          {
+            "node": "Send Newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Newsletter": {
+      "main": [
+        [
+          {
+            "node": "Save Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Log": {
+      "main": [
+        [
+          {
+            "node": "Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audience Data": {
+      "main": [
+        [
+          {
+            "node": "Extract Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Items": {
+      "main": [
+        [
+          {
+            "node": "Audience Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract Emails": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Africa/Nairobi",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "pkLarWCkcrXyGyXy"
+  },
+  "versionId": "108535ff-8b27-4573-9d21-a4cded8b1d8b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "48fed755744d55459ece9ccef36da041c952e24afe1b4b477443e787dcdef8f1"
+  },
+  "nodeGroups": [],
+  "id": "kKxuvrh2ZBoOnU9R",
+  "tags": []
+}
