@@ -6,7 +6,7 @@ This repository contains the n8n deployment files for the Automated Newsletter S
 The architecture strictly adheres to enterprise standards: Structured AI Outputs, Fault Tolerance, Intentional Model Selection, and Operational Governance.
 
 ## 🏗️ System Architecture & Node Breakdown
-The system is decoupled into three distinct workflows to ensure modularity, scalability, and fault tolerance:
+The system is decoupled into two distinct workflows to ensure modularity, scalability, and fault tolerance:
 
 ### 1. Data Ingestion Pipeline (`Data Ingestion Pipeline.json`)
 **Purpose:** Safely extract, standardize, and clean raw data from multiple sources.
