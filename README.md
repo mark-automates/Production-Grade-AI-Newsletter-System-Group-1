@@ -25,14 +25,6 @@ The system is decoupled into three distinct workflows to ensure modularity, scal
 * **Human-in-the-Loop (HITL) & Feedback Loop:** Sends a draft via Gmail (`sendAndWait`) and pauses execution using a `Wait` node. A `Decision` node then evaluates the human response: if **approved**, the draft bypasses further editing and proceeds directly to delivery. If **disapproved** with editorial feedback, a **Backup Editor AI** dynamically reaches back across the workflow to grab the original raw stories and completely rewrites the HTML draft based on the strict human constraints.
 * **Delivery & Logging:** Dispatches the final HTML newsletter, saves the final log to the database, and notifies the team.
 
-### 3. Error Workflow (`Error Workflow.json`)
-**Purpose:** A dedicated, system-wide listener that catches catastrophic failures and prevents silent crashes.
-* **Trigger:** `Error Trigger` (Listens to all published workflows in the n8n instance).
-* **AI Error Triage:** Passes raw error data to an Error Analysis Agent.
-* **Structured Enforcement:** A `Structured Output Parser` forces the AI to output a strict JSON schema containing a `Solution` and a `Priority_Level` (High/Medium/Low).
-* **Governance Logging:** Logs highly actionable data to Google Sheets, including the exact `RunID`, Node Name, Timestamp, and AI Solution for complete auditability.
-* **Priority Routing:** A `Switch` node routes the alert to the Engineering Team via Gmail based on the AI-determined priority.
-
 ## ⚙️ Deployment Instructions
 1. Import all three `.json` files into your n8n instance.
 2. Update Credentials for Google Sheets, Gmail, and OpenRouter/Mistral across all workflows.
