@@ -1,4 +1,4 @@
-# 🚀 Production-Grade AI Newsletter System 
+# 🚀 AI Newsletter System 
 
 ## 📌 Project Overview
 This repository contains the n8n deployment files for the Automated Newsletter System. Upgraded from a functional prototype to a hardened, production-grade architecture, this system features parallel data ingestion, AI-driven content curation, and advanced human-in-the-loop feedback cycles. 
