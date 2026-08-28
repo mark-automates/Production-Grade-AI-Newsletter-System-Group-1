@@ -1,7 +1,7 @@
-# 🚀 Production-Grade AI Newsletter System (Moringa News)
+# 🚀 Production-Grade AI Newsletter System 
 
 ## 📌 Project Overview
-This repository contains the n8n deployment files for the Moringa News Automated Newsletter System. Upgraded from a functional prototype to a hardened, production-grade architecture, this system features parallel data ingestion, AI-driven content curation, advanced human-in-the-loop feedback cycles, and a dedicated error-handling pipeline. 
+This repository contains the n8n deployment files for the Automated Newsletter System. Upgraded from a functional prototype to a hardened, production-grade architecture, this system features parallel data ingestion, AI-driven content curation, advanced human-in-the-loop feedback cycles, and a dedicated error-handling pipeline. 
 
 The architecture strictly adheres to enterprise standards: Structured AI Outputs, Fault Tolerance, Intentional Model Selection, and Operational Governance.
 
