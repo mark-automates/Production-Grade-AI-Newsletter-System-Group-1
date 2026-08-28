@@ -26,7 +26,7 @@ The system is decoupled into three distinct workflows to ensure modularity, scal
 * **Delivery & Logging:** Dispatches the final HTML newsletter, saves the final log to the database, and notifies the team.
 
 ## ⚙️ Deployment Instructions
-1. Import all three `.json` files into your n8n instance.
+1. Import all two `.json` files into your n8n instance.
 2. Update Credentials for Google Sheets, Gmail, and OpenRouter/Mistral across all workflows.
-3. **Crucial:** Ensure ALL THREE workflows are set to `Published` (Active). The system relies on active triggers (Schedule, Execute by Another, and Error Trigger) to function autonomously.
+3. **Crucial:** Ensure ALL TWO workflows are set to `Published` (Active). The system relies on active triggers (Schedule, and Execute by Another) to function autonomously.
 4. Execute the Data Ingestion Pipeline to initiate the full system run.
